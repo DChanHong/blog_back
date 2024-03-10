@@ -10,8 +10,22 @@ const { createCoreController } = require("@strapi/strapi").factories;
 
 module.exports = createCoreController("api::blog-post.blog-post", {
   count(ctx) {
-    var { query } = ctx.request;
-    return strapi.query("api::blog-post.blog-post").count({ where: query });
+    var { tag, search } = ctx.params;
+    if (tag === "blank" && search === "blank") {
+      return strapi.query("api::blog-post.blog-post").count({ where: {} });
+    } else if (tag !== "blank") {
+      return strapi.query("api::blog-post.blog-post").count({
+        where: {
+          tags: { $contains: [tag] },
+        },
+      });
+    } else if (search !== "blank") {
+      return strapi.query("api::blog-post.blog-post").count({
+        where: {
+          title: { $contains: `%${search}%` },
+        },
+      });
+    }
   },
   find: async (ctx) => {
     try {
@@ -32,12 +46,30 @@ module.exports = createCoreController("api::blog-post.blog-post", {
   },
   findMany: async (ctx) => {
     try {
-      const { page, pageSize } = ctx.params;
-      console.log(page, pageSize);
-      const data = await strapi.query("api::blog-post.blog-post").findMany({
-        offset: page - 1,
-        limit: pageSize,
-      });
+      const { page, pageSize, tag, search } = ctx.params;
+      let data;
+      if (tag === "blank" && search === "blank") {
+        data = await strapi.query("api::blog-post.blog-post").findMany({
+          offset: page - 1,
+          limit: pageSize,
+        });
+      } else if (tag !== "blank") {
+        data = await strapi.query("api::blog-post.blog-post").findMany({
+          where: {
+            tags: { $contains: [tag] },
+          },
+          offset: (page - 1) * pageSize,
+          limit: pageSize,
+        });
+      } else if (search !== "blank") {
+        data = await strapi.query("api::blog-post.blog-post").findMany({
+          where: {
+            title: { $contains: `%${search}%` },
+          },
+          offset: (page - 1) * pageSize,
+          limit: pageSize,
+        });
+      }
       return ctx.send({ data });
     } catch (error) {
       return ctx.send(error);

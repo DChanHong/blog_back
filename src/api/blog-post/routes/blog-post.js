@@ -12,7 +12,7 @@ module.exports = {
   routes: [
     {
       method: "GET",
-      path: "/blog-posts/count",
+      path: "/blog-posts/count/:tag/:search",
       handler: "blog-post.count",
     },
     {
@@ -27,7 +27,7 @@ module.exports = {
     },
     {
       method: "GET",
-      path: "/blog-posts/:page/:pageSize",
+      path: "/blog-posts/:page/:pageSize/:tag/:search",
       handler: "blog-post.findMany",
     },
   ],
