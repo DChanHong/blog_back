@@ -11,6 +11,7 @@ module.exports = [
         "http://localhost:1337",
         "http://localhost:3000",
         "https://strapi.chanhong.pro",
+        "https://blog.chanhong.pro",
       ],
     },
   },
