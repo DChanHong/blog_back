@@ -12,6 +12,7 @@ module.exports = [
         "http://localhost:3000",
         "https://blog.chanhong.pro",
         "https://hong-blog.vercel.app",
+        "https://strapi.chanhong.pro",
       ],
     },
   },
