@@ -38,7 +38,10 @@ module.exports = createCoreController("api::blog-post.blog-post", {
   findOne: async (ctx) => {
     try {
       const { id } = ctx.params;
-      const data = await strapi.query("api::blog-post.blog-post").findOne(id);
+      console.log(id);
+      const data = await strapi.query("api::blog-post.blog-post").findOne({
+        where: { id: id },
+      });
       return ctx.send({ data });
     } catch (err) {
       return ctx.send(err);
